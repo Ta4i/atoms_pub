@@ -74,6 +74,11 @@
                     atoms.user.marker = L.marker(atoms.user.latlng, {icon: userIcon}).addTo(atoms.map);
                     atoms.ws = new WebSocket('ws://54.200.66.15:443/');
                     atoms.ws.onopen = function(){
+                        var geo_options = {
+                          enableHighAccuracy: true, 
+                          maximumAge        : 30000, 
+                          timeout           : 27000
+                        };
                         navigator.geolocation.watchPosition(function(position){
                             atoms.user.latlng = [position.coords.latitude, position.coords.longitude];
                             atoms.user.marker.setLatLng(atoms.user.latlng);
@@ -84,7 +89,9 @@
                                 sid: atoms.user.sid
                             };
                             atoms.ws.send(JSON.stringify(message));
-                        });
+                        },function(error){
+                            console.warn('Watch Position Error',error)
+                        },geo_options);
                     };
                     atoms.ws.onmessage = function(message){
                         console.log('onmessage', message);
