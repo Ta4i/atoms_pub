@@ -107,6 +107,7 @@
                         if(data.type === 'ALL_USERS'){
                             for(var uid in data.data){
                                 if(data.data.hasOwnProperty(uid) && uid !== atoms.user.sid){
+                                    var ouser = data.data[uid];
                                     if(atoms.otherUsers[uid]){
                                         var umark = atoms.userMarkers.filter(function(m){
                                             return m.uid === uid;
@@ -116,7 +117,6 @@
                                             ouser.lng
                                         ]);
                                     }else{
-                                        var ouser = data.data[uid];
                                         var marker = L.marker([
                                                 ouser.lat,
                                                 ouser.lng
