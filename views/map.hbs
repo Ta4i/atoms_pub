@@ -92,14 +92,27 @@
                         console.log('Respond type: ', data.type, data.data);
                         if(data.type === 'ALL_USERS'){
                             for(var uid in data.data){
-                                if(data.data.hasOwnProperty(uid) && uid !== atoms.user.sid && !atoms.otherUsers[uid]){
-                                    var ouser = data.data[uid];
-                                    var marker = L.marker([
-                                            ouser.lat,
-                                            ouser.lng
-                                        ], {icon: userIcon}).addTo(atoms.map);
-                                    atoms.userMarkers.push(marker);
-                                    atoms.otherUsers[uid] = true;
+                                if(data.data.hasOwnProperty(uid) && uid !== atoms.user.sid){
+                                    if(atoms.otherUsers[uid]){
+                                        var umark = atoms.userMarkers.filter(function(m){
+                                            return m.uid === uid;
+                                        })[0];
+                                        umark.marker.setLatLng([
+                                                ouser.lat,
+                                                ouser.lng
+                                            ]);
+                                    }else{
+                                        var ouser = data.data[uid];
+                                        var marker = L.marker([
+                                                ouser.lat,
+                                                ouser.lng
+                                            ], {icon: userIcon}).addTo(atoms.map);
+                                        atoms.userMarkers.push({
+                                            uid: uid
+                                            marker: marker
+                                        });
+                                        atoms.otherUsers[uid] = true;
+                                    }
                                 }
                             }
                         }
