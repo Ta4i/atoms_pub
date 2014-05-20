@@ -108,6 +108,7 @@
                             for(var uid in data.data){
                                 if(data.data.hasOwnProperty(uid) && uid !== atoms.user.sid){
                                     var ouser = data.data[uid];
+                                    console.log('other user', ouser);
                                     if(atoms.otherUsers[uid]){
                                         var umark = atoms.userMarkers.filter(function(m){
                                             return m.uid === uid;

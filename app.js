@@ -1,24 +1,9 @@
 var express   = require('express'),
     path      = require('path'),
-    mongoose  = require('mongoose'),
     fs        = require('fs'),
-    WebSocket = require('ws');
+    WebSocket = require('ws'),
+    MongoClient = require('mongodb').MongoClient;    
 
-mongoose.connect('mongodb://localhost/atoms');
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback () {
-	console.log("It's opened");
-});
-var user = mongoose.Schema({
-    name: String,
-    password: String
-});
-var User = mongoose.model('User', user);
-var currentUser = new User({
-	name: 'makk',
-	password: 'admin'
-});
 
 //create our express app
 var app   = express(),
@@ -37,14 +22,25 @@ app.configure(function() {
 	app.set('views', path.join(__dirname, 'views'));
 });
  
-//routes
+MongoClient.connect("mongodb://localhost:27017/exampleDb", function(err, db) {
+	if(!err) {
+		console.log("We are connected");
+	}
+});
 
+//routes
 app.use('/static', express.static(__dirname + '/static'));
 
+app.get('*',function(req, res){
+	console.log('_____________________________');
+	for(var key in req){
+		console.log('>>>>',key);
+	}
+	console.log('TTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
+})
+
 app.get('/', function(req, res) {
-	currentUser.save(function(err, currentUser){
-	    res.render('index', {'name': currentUser.name});
-	});
+    res.render('index', {'name': 'Name'});
 });
 app.get('/map', function(req, res) {
     res.render('map');
@@ -106,8 +102,5 @@ function onWSMessage(data){
 	    	type: 'ALL_USERS',
 	    	data: users
 	    }));
-	    // ws.send(JSON.stringify({
-	    // 	type: 'SERVER_ON_COORDINATES'
-	    // }));
 	}
 };
