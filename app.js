@@ -79,9 +79,10 @@ console.log('Your app is now running at: http://127.0.0.1:3000/');
 function startWebsocet(){
 	try{
 		wss = new WebSocket.Server({
-			port: 3000
+			port: 3001
 		});
 		wss.on('connection', function(_ws) {
+			console.log('Connection WS Established.');
 			ws = _ws;
 		    ws.on('message', onWSMessage);
 		    wss.broadcast = function(data) {
