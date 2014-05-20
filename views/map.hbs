@@ -74,7 +74,7 @@
                     atoms.user.marker = L.marker(atoms.user.latlng, {icon: userIcon}).addTo(atoms.map);
                     atoms.ws = new WebSocket('ws://54.200.66.15:443/');
                     atoms.ws.onopen = function(){
-                        atoms.user.interval = setInterval(function(){
+                        navigator.geolocation.watchPosition(function(){
                             atoms.user.latlng = [geo.coords.latitude, geo.coords.longitude];
                             atoms.user.marker.setLatLng(atoms.user.latlng);
                             var message = {
@@ -84,7 +84,7 @@
                                 sid: atoms.user.sid
                             };
                             atoms.ws.send(JSON.stringify(message));
-                        },5000);
+                        });
                     };
                     atoms.ws.onmessage = function(message){
                         console.log('onmessage', message);
