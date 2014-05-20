@@ -71,7 +71,7 @@
                     });
 
                     atoms.user.marker = L.marker(atoms.user.latlng, {icon: userIcon}).addTo(atoms.map);
-                    atoms.ws = new WebSocket('ws://54.200.66.15:3001/');
+                    atoms.ws = new WebSocket('ws://54.200.66.15/');
                     atoms.ws.onopen = function(){
                         atoms.user.interval = setInterval(function(){
                             atoms.user.latlng = [geo.coords.latitude, geo.coords.longitude];
