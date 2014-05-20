@@ -22,16 +22,16 @@ app.configure(function() {
 	app.set('views', path.join(__dirname, 'views'));
 });
  
-MongoClient.connect("mongodb://localhost:27017/exampleDb", function(err, db) {
-	if(!err) {
-		console.log("We are connected");
-	}
-});
+// MongoClient.connect("mongodb://localhost:27017/exampleDb", function(err, db) {
+// 	if(!err) {
+// 		console.log("We are connected");
+// 	}
+// });
 
 //routes
 app.use('/static', express.static(__dirname + '/static'));
 
-app.get('*',function(req, res){
+app.get('/coupons',function(req, res){
 	console.log('_____________________________');
 	for(var key in req){
 		console.log('>>>>',key);
