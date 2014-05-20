@@ -61,7 +61,8 @@
                     localStorage.sid = atoms.user.sid;
                     atoms.user.latlng = [geo.coords.latitude, geo.coords.longitude];
                     atoms.map.setView(atoms.user.latlng);
-
+                    atoms.userMarkers = [];
+                    atoms.otherUsers = {};
                     var userIcon = L.icon({
                         iconUrl       : '/static/img/marker.png',
                         iconRetinaUrl : '/static/img/marker@2x.png',
@@ -89,6 +90,19 @@
                         console.log('onmessage', message);
                         var data = JSON.parse(message.data);
                         console.log('Respond type: ', data.type, data.data);
+                        if(data.type === 'ALL_USERS'){
+                            for(var uid in data.data){
+                                if(data.data.hasOwnProperty(uid) && uid !== atoms.user.sid && !atoms.otherUsers[uid]){
+                                    var ouser = data.data[uid];
+                                    var marker = L.marker([
+                                            ouser.lat,
+                                            ouser.lng
+                                        ], {icon: userIcon}).addTo(atoms.map);
+                                    atoms.userMarkers.push(marker);
+                                    atoms.otherUsers[uid] = true;
+                                }
+                            }
+                        }
                     };
                     atoms.ws.onclose = function(message){
 
