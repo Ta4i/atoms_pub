@@ -72,6 +72,12 @@
                     });
 
                     atoms.user.marker = L.marker(atoms.user.latlng, {icon: userIcon}).addTo(atoms.map);
+                    atoms.user.circle = L.circle(atoms.user.latlng, geo.coords.accuracy, {
+                        color: '#369',
+                        fillColor: '#39f',
+                        fillOpacity: 0.3
+                    }).addTo(atoms.map);
+
                     atoms.ws = new WebSocket('ws://54.200.66.15:443/');
                     atoms.ws.onopen = function(){
                         var geo_options = {
@@ -82,6 +88,7 @@
                         navigator.geolocation.watchPosition(function(position){
                             atoms.user.latlng = [position.coords.latitude, position.coords.longitude];
                             atoms.user.marker.setLatLng(atoms.user.latlng);
+                            atoms.user.circle.setLatLng(atoms.user.latlng);
                             var message = {
                                 type: 'USER_COORDINATES',
                                 lat: atoms.user.latlng[0],
@@ -105,18 +112,20 @@
                                             return m.uid === uid;
                                         })[0];
                                         umark.marker.setLatLng([
-                                                ouser.lat,
-                                                ouser.lng
-                                            ]);
+                                            ouser.lat,
+                                            ouser.lng
+                                        ]);
                                     }else{
                                         var ouser = data.data[uid];
                                         var marker = L.marker([
                                                 ouser.lat,
                                                 ouser.lng
                                             ], {icon: userIcon}).addTo(atoms.map);
+
                                         atoms.userMarkers.push({
                                             uid: uid,
-                                            marker: marker
+                                            marker: marker,
+                                            circle: circle
                                         });
                                         atoms.otherUsers[uid] = true;
                                     }
